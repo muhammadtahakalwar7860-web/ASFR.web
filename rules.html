@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rules & Regulations — ASFR</title>
+  <link rel="icon" href="assets/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0e17;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.8);
+      --bg-elevated: #1a2035;
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.15);
+      --teal: #2fb8a6;
+      --teal-glow: rgba(47,184,166,0.15);
+      --teal-dim: #1f8577;
+      --sunset: #e8963d;
+      --sunset-soft: #f2b563;
+      --text-primary: #f0f4f8;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --nav-h: 72px;
+      --radius: 14px;
+      --shadow: 0 20px 50px -20px rgba(0,0,0,0.5);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .display {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    ul, ol { list-style: none; }
+
+    /* ─── NAV ─── */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: linear-gradient(180deg, rgba(10,14,23,0.92) 0%, rgba(10,14,23,0.78) 100%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-inner {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-text { display: flex; flex-direction: column; }
+
+    .brand-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      color: #fff;
+      font-size: 1.28rem;
+      line-height: 1.1;
+    }
+
+    .brand-subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 2.4rem;
+      align-items: center;
+    }
+
+    .nav-tabs a {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      padding: 0.3rem 0;
+      border-bottom: 2px solid transparent;
+      transition: all 0.25s ease;
+    }
+
+    .nav-tabs a:hover,
+    .nav-tabs a.active {
+      color: #fff;
+      opacity: 1;
+      border-bottom-color: var(--teal);
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--teal);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 0.55rem 1.5rem;
+      border-radius: 999px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .nav-cta:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(47,184,166,0.35);
+    }
+
+    /* Burger */
+    .burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      z-index: 1100;
+      background: none;
+      border: none;
+    }
+
+    .burger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.35s ease;
+      transform-origin: center;
+    }
+
+    .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .burger.open span:nth-child(2) { opacity: 0; }
+    .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile panel */
+    .mobile-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 280px;
+      height: 100vh;
+      background: linear-gradient(180deg, rgba(10,14,23,0.97) 0%, rgba(17,24,39,0.97) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 1050;
+      padding: 6rem 2rem 2rem;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      border-left: 1px solid var(--border-subtle);
+    }
+
+    .mobile-panel.open { transform: translateX(0); }
+
+    .mobile-panel a {
+      display: block;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+      transition: color 0.25s ease;
+    }
+
+    .mobile-panel a:hover,
+    .mobile-panel a.active { color: var(--teal); }
+
+    .mobile-panel .nav-cta {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1040;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    .mobile-overlay.open { opacity: 1; pointer-events: auto; }
+
+    @media (max-width: 900px) {
+      .nav-tabs, .nav-inner > .nav-cta { display: none; }
+      .burger { display: flex; }
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      padding: calc(var(--nav-h) + 4rem) 2rem 4rem;
+      text-align: center;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 40%, rgba(47,184,166,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 60% at 60% 60%, rgba(30,80,140,0.04) 0%, transparent 70%),
+        var(--bg-primary);
+    }
+
+    .hero-content { max-width: 700px; margin: 0 auto; }
+
+    .hero .eyebrow {
+      color: var(--teal);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      line-height: 1.05;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff 60%, var(--teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    /* ─── RULES CONTENT ─── */
+    .rules-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem 4rem;
+    }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(480px, 100%), 1fr));
+      gap: 1.8rem;
+    }
+
+    .rules-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .rules-panel:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 1.4rem 1.6rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .panel-icon {
+      font-size: 1.6rem;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--teal-glow);
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .panel-title-group { display: flex; flex-direction: column; gap: 0.15rem; }
+
+    .panel-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+    }
+
+    .panel-subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .rule-list {
+      padding: 0.8rem 1.6rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .rule-item {
+      display: flex;
+      gap: 0.85rem;
+      padding: 0.85rem 0.5rem;
+      border-left: 2px solid transparent;
+      border-radius: 4px;
+      transition: border-color 0.25s ease, background 0.25s ease;
+      margin-left: -0.5rem;
+      padding-left: 0.5rem;
+    }
+
+    .rule-item:not(:last-child) {
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .rule-item:hover {
+      border-left-color: var(--teal);
+      background: rgba(47,184,166,0.03);
+    }
+
+    .rule-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--teal);
+      background: var(--teal-glow);
+      min-width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .rule-content { flex: 1; }
+
+    .rule-title {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .rule-desc {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ─── PUNISHMENT NOTICE ─── */
+    .punishment-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+    }
+
+    .punishment-banner {
+      background: linear-gradient(135deg, rgba(232,150,61,0.08) 0%, rgba(232,150,61,0.03) 100%);
+      border: 1px solid rgba(232,150,61,0.18);
+      border-radius: var(--radius);
+      padding: 2rem 2.2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .punishment-banner::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--sunset);
+      border-radius: 4px 0 0 4px;
+    }
+
+    .punishment-header {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+
+    .punishment-icon { font-size: 1.5rem; }
+
+    .punishment-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--sunset-soft);
+    }
+
+    .punishment-text {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .escalation-list {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .escalation-step {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      background: rgba(232,150,61,0.1);
+      color: var(--sunset-soft);
+      border: 1px solid rgba(232,150,61,0.15);
+    }
+
+    .escalation-arrow {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .ban-worthy-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #ef4444;
+      margin-bottom: 0.7rem;
+    }
+
+    .ban-worthy-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .ban-tag {
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.35rem 0.85rem;
+      border-radius: 8px;
+      background: rgba(239,68,68,0.08);
+      color: #f87171;
+      border: 1px solid rgba(239,68,68,0.15);
+    }
+
+    /* ─── FINAL NOTES ─── */
+    .final-notes {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+      gap: 1.2rem;
+    }
+
+    .note-badge {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1.2rem 1.4rem;
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius);
+      transition: border-color 0.3s ease;
+    }
+
+    .note-badge:hover { border-color: var(--border-hover); }
+
+    .note-icon { font-size: 1.4rem; flex-shrink: 0; line-height: 1.4; }
+
+    .note-text {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 2000;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--teal);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      max-width: 380px;
+      box-shadow: 0 16px 48px -12px rgba(0,0,0,0.6);
+      transform: translateY(120%);
+      opacity: 0;
+      transition: transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.45s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+    .toast-msg {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      flex: 1;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 0.2rem;
+      line-height: 1;
+      transition: color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .toast-close:hover { color: var(--text-primary); }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-subtle);
+      padding: 3rem 2rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      transition: color 0.25s ease;
+    }
+
+    .footer-links a:hover { color: var(--teal); }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    [data-reveal].visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── REDUCED MOTION ─── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      [data-reveal] {
+        opacity: 1;
+        transform: none;
+      }
+      .toast {
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 600px) {
+      .hero { padding: calc(var(--nav-h) + 3rem) 1.2rem 3rem; }
+      .rules-section, .punishment-section, .final-notes { padding-left: 1.2rem; padding-right: 1.2rem; }
+      .panel-header { padding: 1.2rem 1.2rem; }
+      .rule-list { padding: 0.6rem 1.2rem 1.2rem; }
+      .punishment-banner { padding: 1.6rem 1.4rem; }
+      .escalation-list { gap: 0.35rem; }
+      .toast { right: 1rem; left: 1rem; max-width: unset; bottom: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <header class="header">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">
+        <div class="brand-mark"><img src="assets/logo.png" onerror="if(this.src.includes('assets/')){this.src='logo.png';}" alt="ASFR Logo"></div>
+        <div class="brand-text">
+          <span class="brand-name">ASFR</span>
+          <span class="brand-subtitle">Apex Southwest Florida Roleplay</span>
+        </div>
+      </a>
+
+      <nav class="nav-tabs">
+        <a href="index.html">Home</a>
+        <a href="rules.html" class="active">Rules</a>
+        <a href="banned-vehicles.html">Banned Vehicles</a>
+      </nav>
+
+      <a href="https://discord.gg/aXCKGsg6hA" target="_blank" rel="noopener" class="nav-cta">Join Server</a>
+
+      <button class="burger" id="burger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="mobile-panel" id="mobilePanel">
+    <a href="index.html">Home</a>
+    <a href="rules.html" class="active">Rules</a>
+    <a href="banned-vehicles.html">Banned Vehicles</a>
+    <a href="https://discord.gg/aXCKGsg6hA" target="_blank" rel="noopener" class="nav-cta">Join Server</a>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="hero-content" data-reveal>
+      <span class="eyebrow">Server Guidelines</span>
+      <h1 class="display">Rules &amp; Regulations</h1>
+      <p class="subtitle">Read and understand our rules before joining. Ignorance is not an excuse.</p>
+    </div>
+  </section>
+
+  <!-- ═══ RULES ═══ -->
+  <section class="rules-section">
+    <div class="rules-grid">
+
+      <!-- Category 1: Community Conduct -->
+      <div class="rules-panel" data-reveal>
+        <div class="panel-header">
+          <div class="panel-icon">👥</div>
+          <div class="panel-title-group">
+            <span class="panel-title">Community Conduct</span>
+            <span class="panel-subtitle">Respect • Integrity • Fairness</span>
+          </div>
+        </div>
+        <div class="rule-list">
+          <div class="rule-item">
+            <span class="rule-num">1</span>
+            <div class="rule-content">
+              <div class="rule-title">Respect Everyone</div>
+              <div class="rule-desc">Treat all members with respect. No harassment, bullying, or toxic behavior will be tolerated.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">2</span>
+            <div class="rule-content">
+              <div class="rule-title">No Hate Speech</div>
+              <div class="rule-desc">Racism, slurs, discrimination, or offensive language will result in instant punishment.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">3</span>
+            <div class="rule-content">
+              <div class="rule-title">No Toxic Behavior</div>
+              <div class="rule-desc">Trolling, provoking arguments, or intentionally disrupting the community is not allowed.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">4</span>
+            <div class="rule-content">
+              <div class="rule-title">No Drama or Instigating</div>
+              <div class="rule-desc">Avoid unnecessary arguments or conflict creation.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">5</span>
+            <div class="rule-content">
+              <div class="rule-title">No Impersonation</div>
+              <div class="rule-desc">Do not impersonate staff members, content creators, or other community members.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">6</span>
+            <div class="rule-content">
+              <div class="rule-title">Protect Personal Information</div>
+              <div class="rule-desc">Do not share your own or anyone else's personal information. Doxxing or threats result in an immediate permanent ban.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 2: Server Guidelines -->
+      <div class="rules-panel" data-reveal>
+        <div class="panel-header">
+          <div class="panel-icon">📋</div>
+          <div class="panel-title-group">
+            <span class="panel-title">Server Guidelines</span>
+            <span class="panel-subtitle">Discord Server Rules</span>
+          </div>
+        </div>
+        <div class="rule-list">
+          <div class="rule-item">
+            <span class="rule-num">1</span>
+            <div class="rule-content">
+              <div class="rule-title">No Spamming</div>
+              <div class="rule-desc">Do not spam messages, emojis, GIFs, reactions, mentions, or media. Keep conversations readable.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">2</span>
+            <div class="rule-content">
+              <div class="rule-title">Keep Content Appropriate</div>
+              <div class="rule-desc">No NSFW, graphic, or disturbing content of any kind.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">3</span>
+            <div class="rule-content">
+              <div class="rule-title">No Advertising</div>
+              <div class="rule-desc">Do not promote other servers, socials, or links without permission — not even in DMs. If we receive a report, you can be banned.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">4</span>
+            <div class="rule-content">
+              <div class="rule-title">No Scams or Malicious Links</div>
+              <div class="rule-desc">Posting scam or phishing links results in an immediate ban.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">5</span>
+            <div class="rule-content">
+              <div class="rule-title">Use Channels Properly</div>
+              <div class="rule-desc">Stay on-topic and use the correct designated channels for your discussions.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">6</span>
+            <div class="rule-content">
+              <div class="rule-title">English Only</div>
+              <div class="rule-desc">Please communicate in English unless a channel specifically allows other languages.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">7</span>
+            <div class="rule-content">
+              <div class="rule-title">Appropriate Usernames &amp; Profiles</div>
+              <div class="rule-desc">Usernames, nicknames, profile pictures, and statuses must remain appropriate and inoffensive.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">8</span>
+            <div class="rule-content">
+              <div class="rule-title">Follow Discord's Terms of Service</div>
+              <div class="rule-desc">All members must comply with Discord's Terms of Service and Community Guidelines at all times.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 3: Voice Chat -->
+      <div class="rules-panel" data-reveal>
+        <div class="panel-header">
+          <div class="panel-icon">🎙️</div>
+          <div class="panel-title-group">
+            <span class="panel-title">Voice Chat</span>
+            <span class="panel-subtitle">Voice Channel Conduct</span>
+          </div>
+        </div>
+        <div class="rule-list">
+          <div class="rule-item">
+            <span class="rule-num">1</span>
+            <div class="rule-content">
+              <div class="rule-title">No Mic Spam or Earrape</div>
+              <div class="rule-desc">Keep voice chat clean and respectful at all times.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">2</span>
+            <div class="rule-content">
+              <div class="rule-title">No Soundboards or Noise Abuse</div>
+              <div class="rule-desc">Excessive soundboard usage or intentional noise disruption is prohibited.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 4: Roleplay Rules -->
+      <div class="rules-panel" data-reveal>
+        <div class="panel-header">
+          <div class="panel-icon">🎮</div>
+          <div class="panel-title-group">
+            <span class="panel-title">Roleplay Rules</span>
+            <span class="panel-subtitle">In-Game Roleplay Standards</span>
+          </div>
+        </div>
+        <div class="rule-list">
+          <div class="rule-item">
+            <span class="rule-num">1</span>
+            <div class="rule-content">
+              <div class="rule-title">No Fail RP</div>
+              <div class="rule-desc">Unrealistic actions or ignoring roleplay situations is not allowed.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">2</span>
+            <div class="rule-content">
+              <div class="rule-title">No Random Deathmatch (RDM)</div>
+              <div class="rule-desc">Killing another player without a valid roleplay reason will result in punishment.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">3</span>
+            <div class="rule-content">
+              <div class="rule-title">No Vehicle Deathmatch (VDM)</div>
+              <div class="rule-desc">Intentionally running players over with vehicles is prohibited.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">4</span>
+            <div class="rule-content">
+              <div class="rule-title">Value Your Life (VYL)</div>
+              <div class="rule-desc">Act realistically in dangerous situations. Your character values their life.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">5</span>
+            <div class="rule-content">
+              <div class="rule-title">No Trolling or Disrupting RP</div>
+              <div class="rule-desc">Do not ruin active scenes, events, or other players' roleplay experiences.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 5: Staff & Administration -->
+      <div class="rules-panel" data-reveal>
+        <div class="panel-header">
+          <div class="panel-icon">⚖️</div>
+          <div class="panel-title-group">
+            <span class="panel-title">Staff &amp; Administration</span>
+            <span class="panel-subtitle">Authority &amp; Appeals</span>
+          </div>
+        </div>
+        <div class="rule-list">
+          <div class="rule-item">
+            <span class="rule-num">1</span>
+            <div class="rule-content">
+              <div class="rule-title">Respect &amp; Follow Staff Instructions</div>
+              <div class="rule-desc">Arguing with staff decisions publicly may lead to additional punishment. Use tickets for concerns.</div>
+            </div>
+          </div>
+          <div class="rule-item">
+            <span class="rule-num">2</span>
+            <div class="rule-content">
+              <div class="rule-title">Staff Decisions Are Final</div>
+              <div class="rule-desc">If you believe a mistake was made, respectfully appeal through the proper channels (support tickets).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category 6: Exploits & Cheats -->
+      <div class="rules-panel" data-reveal>
+        <div class="panel-header">
+          <div class="panel-icon">🚫</div>
+          <div class="panel-title-group">
+            <span class="panel-title">Exploits &amp; Cheats</span>
+            <span class="panel-subtitle">Zero Tolerance Policy</span>
+          </div>
+        </div>
+        <div class="rule-list">
+          <div class="rule-item">
+            <span class="rule-num">1</span>
+            <div class="rule-content">
+              <div class="rule-title">No Exploiting or Glitch Abuse</div>
+              <div class="rule-desc">The use, promotion, or distribution of exploits, cheats, bugs, or unauthorized software results in a permanent ban.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ PUNISHMENT NOTICE ═══ -->
+  <section class="punishment-section">
+    <div class="punishment-banner" data-reveal>
+      <div class="punishment-header">
+        <span class="punishment-icon">⚠️</span>
+        <span class="punishment-title">Violations &amp; Punishments</span>
+      </div>
+      <p class="punishment-text">Violations may result in escalating consequences based on severity:</p>
+      <div class="escalation-list">
+        <span class="escalation-step">Warning</span>
+        <span class="escalation-arrow">→</span>
+        <span class="escalation-step">Timeout / Mute</span>
+        <span class="escalation-arrow">→</span>
+        <span class="escalation-step">Kick</span>
+        <span class="escalation-arrow">→</span>
+        <span class="escalation-step">Temporary Ban</span>
+        <span class="escalation-arrow">→</span>
+        <span class="escalation-step">Permanent Ban</span>
+      </div>
+      <div class="ban-worthy-label">Ban-Worthy Offenses (Immediate):</div>
+      <div class="ban-worthy-list">
+        <span class="ban-tag">Exploiting / Hacking</span>
+        <span class="ban-tag">Hate Speech</span>
+        <span class="ban-tag">NSFW Content</span>
+        <span class="ban-tag">Scamming</span>
+        <span class="ban-tag">Severe Harassment</span>
+        <span class="ban-tag">Ban Evasion</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FINAL NOTES ═══ -->
+  <section class="final-notes">
+    <div class="notes-grid">
+      <div class="note-badge" data-reveal>
+        <span class="note-icon">📜</span>
+        <span class="note-text">Rules apply to both Discord &amp; Roblox</span>
+      </div>
+      <div class="note-badge" data-reveal>
+        <span class="note-icon">🧠</span>
+        <span class="note-text">Ignorance of rules is not an excuse</span>
+      </div>
+      <div class="note-badge" data-reveal>
+        <span class="note-icon">💡</span>
+        <span class="note-text">Not every situation can be covered by these rules. Use common sense and contribute to a friendly and professional community.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TOAST ═══ -->
+  <div class="toast" id="toast">
+    <span class="toast-icon">📢</span>
+    <span class="toast-msg">Make sure to read all rules before joining sessions!</span>
+    <button class="toast-close" id="toastClose" aria-label="Close notification">&times;</button>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="brand-mark"><img src="assets/logo.png" onerror="if(this.src.includes('assets/')){this.src='logo.png';}" alt="ASFR Logo"></div>
+          <div class="brand-text">
+            <span class="brand-name">ASFR</span>
+            <span class="brand-subtitle">Apex Southwest Florida Roleplay</span>
+          </div>
+        </div>
+        <nav class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="rules.html">Rules</a>
+          <a href="banned-vehicles.html">Banned Vehicles</a>
+          <a href="https://discord.gg/aXCKGsg6hA" target="_blank" rel="noopener">Discord</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2025 Apex Southwest Florida Roleplay. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ─── Burger Menu ─── */
+    const burger = document.getElementById('burger');
+    const mobilePanel = document.getElementById('mobilePanel');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+
+    function toggleMenu() {
+      burger.classList.toggle('open');
+      mobilePanel.classList.toggle('open');
+      mobileOverlay.classList.toggle('open');
+      document.body.style.overflow = mobilePanel.classList.contains('open') ? 'hidden' : '';
+    }
+
+    burger.addEventListener('click', toggleMenu);
+    mobileOverlay.addEventListener('click', toggleMenu);
+
+    /* Close mobile panel on link click */
+    mobilePanel.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (mobilePanel.classList.contains('open')) toggleMenu();
+      });
+    });
+
+    /* ─── Scroll Reveal ─── */
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const delay = Array.from(revealEls).indexOf(el) * 0.06;
+            el.style.transitionDelay = delay + 's';
+            el.classList.add('visible');
+            observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      revealEls.forEach(el => observer.observe(el));
+    } else {
+      revealEls.forEach(el => el.classList.add('visible'));
+    }
+
+    /* ─── Toast Notification ─── */
+    const toast = document.getElementById('toast');
+    const toastClose = document.getElementById('toastClose');
+    let toastTimer;
+
+    function showToast() {
+      toast.classList.add('show');
+      toastTimer = setTimeout(() => hideToast(), 5000);
+    }
+
+    function hideToast() {
+      clearTimeout(toastTimer);
+      toast.classList.remove('show');
+    }
+
+    toastClose.addEventListener('click', hideToast);
+    setTimeout(showToast, 2000);
+  </script>
+
+</body>
+</html>

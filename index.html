@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASFR — Apex Southwest Florida Roleplay</title>
+<link rel="icon" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ── DESIGN TOKENS ───────────────────────────────── */
+:root{
+  --bg-primary:#0a0e17;
+  --bg-secondary:#111827;
+  --bg-card:rgba(17,24,39,0.8);
+  --bg-elevated:#1a2035;
+  --border-subtle:rgba(255,255,255,0.06);
+  --border-hover:rgba(255,255,255,0.15);
+  --teal:#2fb8a6;
+  --teal-glow:rgba(47,184,166,0.15);
+  --teal-dim:#1f8577;
+  --sunset:#e8963d;
+  --sunset-soft:#f2b563;
+  --text-primary:#f0f4f8;
+  --text-secondary:#94a3b8;
+  --text-muted:#64748b;
+  --nav-h:72px;
+  --radius:14px;
+  --shadow:0 20px 50px -20px rgba(0,0,0,0.5);
+}
+
+/* ── RESET ───────────────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg-primary);
+  color:var(--text-primary);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+img{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* ── UTILITY TYPOGRAPHY ──────────────────────────── */
+.display{font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:0.02em}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;font-weight:500}
+
+/* ── SCROLL REVEAL ───────────────────────────────── */
+[data-reveal]{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+[data-reveal].visible{opacity:1;transform:translateY(0)}
+
+/* ── NAVBAR ──────────────────────────────────────── */
+.site-header{
+  position:fixed;top:0;left:0;width:100%;z-index:1000;
+  height:var(--nav-h);
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(10,14,23,0.92) 0%,rgba(10,14,23,0.78) 100%);
+  border-bottom:1px solid var(--border-subtle);
+}
+.nav-inner{
+  width:100%;max-width:1200px;padding:0 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+
+/* brand */
+.brand{display:flex;align-items:center;gap:0.75rem}
+.brand-mark{
+  width:42px;height:42px;border-radius:10px;overflow:hidden;
+  border:1px solid var(--teal-glow);
+  box-shadow:0 0 12px var(--teal-glow);
+  flex-shrink:0;
+  display:block;
+}
+.brand-mark img{width:100%;height:100%;object-fit:cover;display:block}
+.brand-text{display:flex;flex-direction:column}
+.brand-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.28rem;color:#fff;line-height:1.15}
+.brand-sub{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--teal);text-transform:uppercase;letter-spacing:0.06em}
+
+/* tabs */
+.nav-tabs{display:flex;gap:2.4rem;align-items:center}
+.nav-tabs a{
+  font-size:0.92rem;font-weight:600;color:rgba(255,255,255,0.7);
+  position:relative;padding:0.25rem 0;transition:color .25s;
+}
+.nav-tabs a::after{
+  content:'';position:absolute;left:0;bottom:-2px;width:100%;height:2px;
+  background:var(--teal);transform:scaleX(0);transition:transform .25s;
+}
+.nav-tabs a:hover,.nav-tabs a.active{color:#fff}
+.nav-tabs a:hover::after,.nav-tabs a.active::after{transform:scaleX(1)}
+
+/* CTA */
+.nav-cta{
+  display:inline-flex;align-items:center;gap:.45rem;
+  background:var(--teal);color:#fff;font-weight:600;font-size:0.88rem;
+  padding:0.55rem 1.5rem;border-radius:999px;
+  transition:transform .2s,box-shadow .2s;
+}
+.nav-cta:hover{transform:scale(1.05);box-shadow:0 4px 20px var(--teal-glow)}
+
+/* burger */
+.burger{display:none;flex-direction:column;gap:5px;width:26px;cursor:pointer;z-index:1100}
+.burger span{display:block;height:2px;width:100%;background:#fff;border-radius:2px;transition:transform .3s,opacity .3s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* mobile panel */
+.mobile-panel{
+  position:fixed;top:0;right:0;width:min(320px,85vw);height:100%;z-index:1050;
+  background:linear-gradient(195deg,rgba(17,24,39,0.97),rgba(10,14,23,0.99));
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-left:1px solid var(--border-subtle);
+  display:flex;flex-direction:column;padding:calc(var(--nav-h) + 2rem) 2rem 2rem;gap:1.2rem;
+  transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+.mobile-panel.open{transform:translateX(0)}
+.mobile-panel a{
+  font-size:1.1rem;font-weight:600;color:var(--text-secondary);
+  padding:0.7rem 0;border-bottom:1px solid var(--border-subtle);transition:color .2s;
+}
+.mobile-panel a:hover,.mobile-panel a.active{color:var(--teal)}
+.mobile-panel .nav-cta{margin-top:1rem;text-align:center;justify-content:center}
+.mobile-overlay{
+  position:fixed;inset:0;z-index:1040;background:rgba(0,0,0,0.5);
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.mobile-overlay.open{opacity:1;pointer-events:auto}
+
+@media(max-width:900px){
+  .nav-tabs,.nav-cta-desktop{display:none}
+  .burger{display:flex}
+}
+
+/* ── HERO ────────────────────────────────────────── */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:calc(var(--nav-h) + 2rem) 1.5rem 4rem;
+  overflow:hidden;
+  background:radial-gradient(ellipse 80% 60% at 50% 45%,rgba(47,184,166,0.06) 0%,var(--bg-primary) 70%);
+}
+.hero::before{
+  content:'';position:absolute;top:-40%;left:-20%;width:140%;height:180%;
+  background:radial-gradient(ellipse at 30% 40%,rgba(47,184,166,0.07) 0%,transparent 55%),
+             radial-gradient(ellipse at 70% 60%,rgba(232,150,61,0.04) 0%,transparent 50%);
+  animation:heroSweep 14s ease-in-out infinite alternate;
+  pointer-events:none;z-index:0;
+}
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,0.035) 1px,transparent 1px);
+  background-size:28px 28px;
+  pointer-events:none;z-index:0;
+}
+@keyframes heroSweep{
+  0%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(3%,-2%) scale(1.05)}
+  100%{transform:translate(-2%,3%) scale(1.02)}
+}
+
+.hero-content{position:relative;z-index:1;max-width:800px}
+.hero .eyebrow{color:var(--teal);margin-bottom:1.2rem;display:inline-block}
+.hero-heading{
+  font-size:clamp(2.8rem,7vw,5.5rem);line-height:1.04;margin-bottom:1.4rem;
+}
+.hero-heading .accent{color:var(--teal)}
+.hero-sub{
+  font-size:1.1rem;line-height:1.7;color:var(--text-secondary);
+  max-width:600px;margin:0 auto 2.4rem;
+}
+.hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--teal);color:#fff;font-weight:600;font-size:1rem;
+  padding:0.8rem 2rem;border-radius:var(--radius);
+  transition:transform .2s,box-shadow .2s;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--teal-glow)}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:transparent;color:#fff;font-weight:600;font-size:1rem;
+  padding:0.8rem 2rem;border-radius:var(--radius);
+  border:1px solid var(--border-hover);
+  transition:transform .2s,border-color .2s,background .2s;
+}
+.btn-secondary:hover{transform:translateY(-2px);border-color:var(--teal);background:rgba(47,184,166,0.06)}
+
+/* scroll indicator */
+.scroll-indicator{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  z-index:1;display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  color:var(--text-muted);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+  font-family:'JetBrains Mono',monospace;
+}
+.scroll-indicator .chevron{
+  width:24px;height:24px;animation:bounce 2s infinite;
+}
+.scroll-indicator .chevron svg{stroke:var(--text-muted);stroke-width:2}
+@keyframes bounce{
+  0%,100%{transform:translateY(0);opacity:.4}
+  50%{transform:translateY(8px);opacity:1}
+}
+
+/* ── WHY US SECTION ──────────────────────────────── */
+.section{padding:6rem 1.5rem}
+.section-inner{max-width:1200px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:3.5rem}
+.section-header .eyebrow{color:var(--teal);margin-bottom:0.6rem;display:inline-block}
+.section-header h2{font-size:clamp(1.8rem,4vw,2.8rem);line-height:1.1}
+
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:1.5rem;
+}
+.feature-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:2rem 1.8rem;
+  transition:transform .3s,border-color .3s,box-shadow .3s;
+}
+.feature-card:hover{
+  transform:translateY(-4px);
+  border-color:var(--border-hover);
+  box-shadow:var(--shadow);
+}
+.feature-icon{
+  width:52px;height:52px;border-radius:50%;
+  background:var(--teal-glow);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;margin-bottom:1.2rem;
+}
+.feature-card h3{font-family:'Inter',sans-serif;font-weight:600;font-size:1.1rem;color:var(--text-primary);margin-bottom:0.6rem}
+.feature-card p{font-size:0.92rem;line-height:1.65;color:var(--text-secondary)}
+
+/* ── FOOTER ──────────────────────────────────────── */
+.site-footer{
+  background:var(--bg-secondary);
+  border-top:1px solid var(--border-subtle);
+  padding:3rem 1.5rem 1.8rem;
+}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-top{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;
+  padding-bottom:2rem;border-bottom:1px solid var(--border-subtle);margin-bottom:1.5rem;
+}
+.footer-brand{display:flex;align-items:center;gap:0.75rem}
+.footer-links{display:flex;gap:2rem;flex-wrap:wrap}
+.footer-links a{font-size:0.9rem;color:var(--text-secondary);transition:color .2s}
+.footer-links a:hover{color:var(--teal)}
+.footer-copy{text-align:center;font-size:0.8rem;color:var(--text-muted)}
+
+/* ── REDUCED MOTION ──────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:0.01ms !important;
+  }
+  [data-reveal]{opacity:1;transform:none}
+}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media(max-width:600px){
+  .hero-heading{font-size:clamp(2.2rem,10vw,3.2rem)}
+  .hero-sub{font-size:1rem}
+  .features-grid{grid-template-columns:1fr}
+  .footer-top{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ NAVBAR ═══════════════════ -->
+<header class="site-header">
+  <nav class="nav-inner">
+    <a href="index.html" class="brand">
+      <div class="brand-mark">
+        <img src="assets/logo.png" onerror="if(this.src.includes('assets/')){this.src='logo.png';}" alt="ASFR Logo">
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">ASFR</span>
+        <span class="brand-sub">Apex Southwest Florida Roleplay</span>
+      </div>
+    </a>
+
+    <div class="nav-tabs">
+      <a href="index.html" class="active">Home</a>
+      <a href="rules.html">Rules</a>
+      <a href="banned-vehicles.html">Banned Vehicles</a>
+    </div>
+
+    <a href="https://discord.gg/aXCKGsg6hA" target="_blank" class="nav-cta nav-cta-desktop">Join Server</a>
+
+    <button class="burger" id="burger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<!-- mobile overlay -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<!-- mobile panel -->
+<div class="mobile-panel" id="mobilePanel">
+  <a href="index.html" class="active">Home</a>
+  <a href="rules.html">Rules</a>
+  <a href="banned-vehicles.html">Banned Vehicles</a>
+  <a href="https://discord.gg/aXCKGsg6hA" target="_blank" class="nav-cta">Join Server</a>
+</div>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-content" data-reveal>
+    <span class="eyebrow">Southwest Florida Roleplay Community</span>
+    <h1 class="hero-heading display">
+      Welcome To<br>
+      <span class="accent">Apex Southwest</span><br>
+      Florida Roleplay
+    </h1>
+    <p class="hero-sub">Experience serious, high-quality roleplay in Southwest Florida. Custom vehicles, professional staff, and a dedicated community await you.</p>
+    <div class="hero-actions">
+      <a href="https://discord.gg/aXCKGsg6hA" target="_blank" class="btn-primary">Join Server <span>&rarr;</span></a>
+      <a href="rules.html" class="btn-secondary">View Rules</a>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="chevron"><svg viewBox="0 0 24 24" fill="none"><polyline points="6 9 12 15 18 9"/></svg></div>
+  </div>
+</section>
+
+<!-- ═══════════════════ WHY US ═══════════════════ -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="section-header" data-reveal>
+      <span class="eyebrow">Why Us</span>
+      <h2 class="display">Built For Real Roleplay</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card" data-reveal>
+        <div class="feature-icon">🛡️</div>
+        <h3>Active Staff</h3>
+        <p>Our dedicated staff team is online around the clock to ensure a safe, fair, and professional roleplay environment.</p>
+      </div>
+      <div class="feature-card" data-reveal>
+        <div class="feature-icon">🎮</div>
+        <h3>Realistic Roleplay</h3>
+        <p>Immersive scenarios, thorough rules, and serious RP that brings Southwest Florida to life.</p>
+      </div>
+      <div class="feature-card" data-reveal>
+        <div class="feature-icon">🚗</div>
+        <h3>Vehicle Regulation</h3>
+        <p>A balanced vehicle tier list and restrictions to prevent reckless driving and maintain RP realism.</p>
+      </div>
+      <div class="feature-card" data-reveal>
+        <div class="feature-icon">👥</div>
+        <h3>Growing Community</h3>
+        <p>Join hundreds of active members in a welcoming, respectful, and thriving roleplay server.</p>
+      </div>
+      <div class="feature-card" data-reveal>
+        <div class="feature-icon">📅</div>
+        <h3>Regular Sessions & Events</h3>
+        <p>Scheduled RP sessions, car meets, and special scenarios to keep every session exciting.</p>
+      </div>
+      <div class="feature-card" data-reveal>
+        <div class="feature-icon">🎯</div>
+        <h3>Fair & Balanced</h3>
+        <p>Equal rules for everyone. Strict anti-RDM/VDM enforcement ensures everyone enjoys their roleplay.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="brand-mark">
+          <img src="assets/logo.png" onerror="if(this.src.includes('assets/')){this.src='logo.png';}" alt="ASFR Logo">
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">ASFR</span>
+          <span class="brand-sub">Apex Southwest Florida Roleplay</span>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="rules.html">Rules</a>
+        <a href="banned-vehicles.html">Banned Vehicles</a>
+        <a href="https://discord.gg/aXCKGsg6hA" target="_blank">Discord</a>
+      </div>
+    </div>
+    <p class="footer-copy">&copy; 2025 Apex Southwest Florida Roleplay. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- ═══════════════════ JS ═══════════════════ -->
+<script>
+(function(){
+  /* ── Burger / Mobile Panel ────────────────────── */
+  const burger  = document.getElementById('burger');
+  const panel   = document.getElementById('mobilePanel');
+  const overlay = document.getElementById('mobileOverlay');
+
+  function toggleMenu(){
+    burger.classList.toggle('open');
+    panel.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+  burger.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', toggleMenu);
+
+  panel.querySelectorAll('a').forEach(function(link){
+    link.addEventListener('click', function(){
+      if(panel.classList.contains('open')) toggleMenu();
+    });
+  });
+
+  /* ── Scroll Reveal (IntersectionObserver) ─────── */
+  var reveals = document.querySelectorAll('[data-reveal]');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    },{threshold:0.15});
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add('visible'); });
+  }
+
+  /* ── Subtle Hero Parallax ─────────────────────── */
+  var heroContent = document.querySelector('.hero-content');
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!prefersReducedMotion && heroContent){
+    window.addEventListener('scroll', function(){
+      var scrollY = window.pageYOffset;
+      var hero = document.querySelector('.hero');
+      if(!hero) return;
+      var heroH = hero.offsetHeight;
+      if(scrollY < heroH){
+        heroContent.style.transform = 'translateY(' + (scrollY * 0.18) + 'px)';
+        heroContent.style.opacity   = 1 - scrollY / heroH * 0.6;
+      }
+    },{passive:true});
+  }
+})();
+</script>
+</body>
+</html>

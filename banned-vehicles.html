@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banned Vehicles — ASFR</title>
+<link rel="icon" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ───────── RESET & VARIABLES ───────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg-primary:#0a0e17;
+  --bg-secondary:#111827;
+  --bg-card:rgba(17,24,39,0.8);
+  --bg-elevated:#1a2035;
+  --border-subtle:rgba(255,255,255,0.06);
+  --border-hover:rgba(255,255,255,0.15);
+  --teal:#2fb8a6;
+  --teal-glow:rgba(47,184,166,0.15);
+  --teal-dim:#1f8577;
+  --sunset:#e8963d;
+  --sunset-soft:#f2b563;
+  --text-primary:#f0f4f8;
+  --text-secondary:#94a3b8;
+  --text-muted:#64748b;
+  --nav-h:72px;
+  --radius:14px;
+  --shadow:0 20px 50px -20px rgba(0,0,0,0.5);
+  --tier1:#2fb8a6;
+  --tier2:#3b82f6;
+  --tier3:#eab308;
+  --tier4:#f97316;
+  --tier5:#ef4444;
+}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 80px)}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg-primary);
+  color:var(--text-primary);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font:inherit;border:none;outline:none;background:none;color:inherit}
+
+/* ───────── HEADER / NAV ───────── */
+.site-header{
+  position:fixed;top:0;left:0;width:100%;z-index:1000;
+  height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;
+  background:linear-gradient(180deg,rgba(10,14,23,0.92),rgba(10,14,23,0.82));
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border-subtle);
+}
+.brand{display:flex;align-items:center;gap:.75rem;text-decoration:none}
+.brand-mark{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  object-fit:cover;
+  flex-shrink:0;
+  display:block;
+}
+.brand-text{display:flex;flex-direction:column}
+.brand-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.28rem;color:#fff;line-height:1.15}
+.brand-sub{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--teal);text-transform:uppercase;letter-spacing:.06em}
+.nav-group{display:flex;align-items:center;gap:2.4rem}
+.nav-tabs{display:flex;gap:2.4rem;list-style:none}
+.nav-tabs a{
+  font-size:.92rem;font-weight:600;color:rgba(255,255,255,0.7);
+  padding:.25rem 0;position:relative;transition:color .25s;
+}
+.nav-tabs a:hover{color:#fff}
+.nav-tabs a.active{color:#fff;opacity:1}
+.nav-tabs a.active::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;
+  height:2px;background:var(--teal);border-radius:2px;
+}
+.nav-cta{
+  background:var(--teal);color:#fff;font-weight:700;font-size:.88rem;
+  padding:.55rem 1.4rem;border-radius:999px;
+  transition:transform .2s,box-shadow .2s;
+}
+.nav-cta:hover{transform:scale(1.05);box-shadow:0 0 20px var(--teal-glow)}
+
+/* burger */
+.burger{display:none;flex-direction:column;gap:5px;width:28px;z-index:1100}
+.burger span{display:block;height:2px;background:#fff;border-radius:2px;transition:transform .3s,opacity .3s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* mobile panel */
+.mobile-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1050;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.mobile-overlay.open{opacity:1;pointer-events:auto}
+.mobile-panel{
+  position:fixed;top:0;right:0;width:280px;height:100%;z-index:1060;
+  background:rgba(17,24,39,0.97);backdrop-filter:blur(20px);
+  transform:translateX(100%);transition:transform .35s ease;
+  padding:6rem 2rem 2rem;display:flex;flex-direction:column;gap:1.5rem;
+  border-left:1px solid var(--border-subtle);
+}
+.mobile-panel.open{transform:translateX(0)}
+.mobile-panel a{
+  font-size:1.1rem;font-weight:600;color:rgba(255,255,255,0.75);
+  padding:.6rem 0;border-bottom:1px solid var(--border-subtle);
+  transition:color .2s;
+}
+.mobile-panel a:hover,.mobile-panel a.active{color:#fff}
+.mobile-panel .nav-cta{display:inline-block;text-align:center;margin-top:.5rem}
+
+@media(max-width:900px){
+  .nav-group{display:none}
+  .burger{display:flex}
+}
+
+/* ───────── HERO ───────── */
+.hero{
+  padding:8rem 2rem 4rem;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 60%,rgba(47,184,166,0.06),transparent),
+    linear-gradient(180deg,var(--bg-primary),var(--bg-secondary));
+  text-align:center;
+}
+.hero-eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:500;
+  color:var(--teal);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.75rem;
+}
+.hero-title{
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:clamp(2.4rem,6vw,4.2rem);text-transform:uppercase;
+  letter-spacing:.04em;line-height:1.1;margin-bottom:1rem;
+}
+.hero-sub{
+  font-size:1.05rem;color:var(--text-secondary);max-width:560px;margin:0 auto;
+}
+
+/* ───────── TOOLBAR ───────── */
+.toolbar{
+  position:sticky;top:var(--nav-h);z-index:500;
+  background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);
+  padding:1rem 2rem;
+  display:flex;flex-wrap:wrap;align-items:center;gap:1rem;
+}
+.toolbar-count{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.05rem;
+  white-space:nowrap;
+}
+.toolbar-count span{color:var(--teal)}
+.toolbar-search{
+  display:flex;align-items:center;gap:.5rem;
+  background:var(--bg-primary);border:1px solid var(--border-subtle);
+  border-radius:10px;padding:.5rem .85rem;flex:1;min-width:180px;max-width:340px;
+  transition:border-color .2s;
+}
+.toolbar-search:focus-within{border-color:var(--teal)}
+.toolbar-search svg{width:16px;height:16px;color:var(--text-muted);flex-shrink:0}
+.toolbar-search input{width:100%;font-size:.88rem;color:var(--text-primary)}
+.toolbar-search input::placeholder{color:var(--text-muted)}
+
+.tier-filters{display:flex;flex-wrap:wrap;gap:.45rem}
+.tier-btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.78rem;font-weight:600;
+  padding:.38rem .85rem;border-radius:999px;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border-subtle);
+  transition:background .2s,border-color .2s;white-space:nowrap;
+}
+.tier-btn:hover{background:rgba(255,255,255,0.08)}
+.tier-btn.active{background:rgba(255,255,255,0.1);border-color:var(--border-hover)}
+.tier-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+.jump-nav{display:flex;flex-wrap:wrap;gap:.5rem;margin-left:auto}
+.jump-link{
+  font-size:.72rem;font-weight:600;color:var(--text-muted);
+  padding:.3rem .65rem;border-radius:8px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--border-subtle);
+  transition:color .2s,border-color .2s;white-space:nowrap;
+}
+.jump-link:hover{color:var(--text-primary);border-color:var(--border-hover)}
+
+@media(max-width:900px){
+  .toolbar{padding:1rem 1.2rem}
+  .jump-nav{width:100%;margin-left:0}
+}
+@media(max-width:480px){
+  .toolbar{flex-direction:column;align-items:stretch}
+  .toolbar-search{max-width:none}
+}
+
+/* ───────── CONTENT ───────── */
+.content{max-width:1100px;margin:0 auto;padding:2.5rem 2rem 4rem}
+
+/* Category sections */
+.cat-section{margin-bottom:3rem;opacity:0;transform:translateY(28px);transition:opacity .5s ease,transform .5s ease}
+.cat-section.visible{opacity:1;transform:none}
+.cat-header{
+  display:flex;align-items:center;gap:.75rem;
+  margin-bottom:1rem;flex-wrap:wrap;
+}
+.cat-icon{font-size:1.4rem}
+.cat-name{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:1.5rem;text-transform:uppercase;letter-spacing:.03em;
+}
+.cat-count{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:500;
+  background:var(--teal-glow);color:var(--teal);
+  padding:.22rem .65rem;border-radius:999px;
+}
+
+/* table card */
+.table-card{
+  background:var(--bg-card);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.v-table{width:100%;border-collapse:collapse}
+.v-table thead{background:var(--bg-elevated)}
+.v-table th{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);
+  padding:.85rem 1.2rem;text-align:left;
+}
+.v-table th:last-child{text-align:center;width:130px}
+.v-table td{padding:.7rem 1.2rem;font-size:.9rem;color:var(--text-secondary);border-top:1px solid var(--border-subtle)}
+.v-table td:last-child{text-align:center}
+.v-table tbody tr:nth-child(even){background:rgba(255,255,255,0.02)}
+.v-table tbody tr{transition:background .15s}
+.v-table tbody tr:hover{background:var(--teal-glow)}
+.v-table tbody tr.filtered-out{display:none}
+
+/* tier badge */
+.tier-badge{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-size:.72rem;font-weight:700;
+  padding:.25rem .7rem;border-radius:999px;
+  font-family:'JetBrains Mono',monospace;
+}
+.tier-badge .dot{width:7px;height:7px;border-radius:50%}
+.tier-badge[data-t="1"]{background:rgba(47,184,166,0.12);color:var(--tier1)}
+.tier-badge[data-t="1"] .dot{background:var(--tier1)}
+.tier-badge[data-t="2"]{background:rgba(59,130,246,0.12);color:var(--tier2)}
+.tier-badge[data-t="2"] .dot{background:var(--tier2)}
+.tier-badge[data-t="3"]{background:rgba(234,179,8,0.12);color:var(--tier3)}
+.tier-badge[data-t="3"] .dot{background:var(--tier3)}
+.tier-badge[data-t="4"]{background:rgba(249,115,22,0.12);color:var(--tier4)}
+.tier-badge[data-t="4"] .dot{background:var(--tier4)}
+.tier-badge[data-t="5"]{background:rgba(239,68,68,0.12);color:var(--tier5)}
+.tier-badge[data-t="5"] .dot{background:var(--tier5)}
+
+/* empty state */
+.empty-state{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:5rem 2rem;text-align:center;
+}
+.empty-state.show{display:flex}
+.empty-state .icon{font-size:3rem;margin-bottom:1rem;opacity:.5}
+.empty-state h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:.4rem}
+.empty-state p{color:var(--text-muted);font-size:.92rem}
+
+/* ───────── FOOTER ───────── */
+.site-footer{
+  background:var(--bg-secondary);border-top:1px solid var(--border-subtle);
+  padding:3rem 2rem 2rem;
+}
+.footer-inner{
+  max-width:1100px;margin:0 auto;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  flex-wrap:wrap;gap:2rem;
+}
+.footer-brand{display:flex;align-items:center;gap:.75rem}
+.footer-brand img{
+  width:38px;
+  height:38px;
+  border-radius:8px;
+  object-fit:cover;
+  flex-shrink:0;
+  display:block;
+}
+.footer-links{display:flex;gap:1.8rem;flex-wrap:wrap}
+.footer-links a{font-size:.88rem;color:var(--text-muted);transition:color .2s}
+.footer-links a:hover{color:var(--teal)}
+.footer-copy{
+  text-align:center;color:var(--text-muted);font-size:.75rem;
+  margin-top:2rem;padding-top:1.5rem;
+  border-top:1px solid var(--border-subtle);
+  max-width:1100px;margin-left:auto;margin-right:auto;
+}
+
+/* ───────── REDUCED MOTION ───────── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .cat-section{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<header class="site-header">
+  <a href="index.html" class="brand">
+    <img src="assets/logo.png" onerror="if(this.src.includes('assets/')){this.src='logo.png';}" alt="ASFR Logo" class="brand-mark">
+    <div class="brand-text">
+      <span class="brand-name">ASFR</span>
+      <span class="brand-sub">Apex Southwest Florida Roleplay</span>
+    </div>
+  </a>
+
+  <nav class="nav-group">
+    <ul class="nav-tabs">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="rules.html">Rules</a></li>
+      <li><a href="banned-vehicles.html" class="active">Banned Vehicles</a></li>
+    </ul>
+    <a href="https://discord.gg/aXCKGsg6hA" target="_blank" class="nav-cta">Join Server</a>
+  </nav>
+
+  <button class="burger" id="burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- mobile -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<nav class="mobile-panel" id="mobilePanel">
+  <a href="index.html">Home</a>
+  <a href="rules.html">Rules</a>
+  <a href="banned-vehicles.html" class="active">Banned Vehicles</a>
+  <a href="https://discord.gg/aXCKGsg6hA" target="_blank" class="nav-cta">Join Server</a>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <p class="hero-eyebrow">Vehicle Registry</p>
+  <h1 class="hero-title">Banned Vehicles</h1>
+  <p class="hero-sub">The following vehicles are restricted or banned from use in our roleplay sessions.</p>
+</section>
+
+<!-- ══════════ TOOLBAR ══════════ -->
+<div class="toolbar" id="toolbar">
+  <div class="toolbar-count"><span id="visibleCount">92</span> Vehicles</div>
+
+  <div class="toolbar-search">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
+    <input type="text" id="searchInput" placeholder="Search vehicles...">
+  </div>
+
+  <div class="tier-filters" id="tierFilters">
+    <button class="tier-btn active" data-tier="all"><span class="tier-dot" style="background:#fff"></span>All</button>
+    <button class="tier-btn" data-tier="1"><span class="tier-dot" style="background:var(--tier1)"></span>Tier 1</button>
+    <button class="tier-btn" data-tier="2"><span class="tier-dot" style="background:var(--tier2)"></span>Tier 2</button>
+    <button class="tier-btn" data-tier="3"><span class="tier-dot" style="background:var(--tier3)"></span>Tier 3</button>
+    <button class="tier-btn" data-tier="4"><span class="tier-dot" style="background:var(--tier4)"></span>Tier 4</button>
+    <button class="tier-btn" data-tier="5"><span class="tier-dot" style="background:var(--tier5)"></span>Tier 5</button>
+  </div>
+
+  <div class="jump-nav">
+    <a href="#hyper-cars" class="jump-link">Hyper Cars</a>
+    <a href="#pick-up-trucks" class="jump-link">Pick Up Trucks</a>
+    <a href="#powersports" class="jump-link">Powersports</a>
+    <a href="#sedans" class="jump-link">Sedans</a>
+    <a href="#super-cars" class="jump-link">Super Cars</a>
+  </div>
+</div>
+
+<!-- ══════════ CONTENT ══════════ -->
+<main class="content">
+
+  <!-- Empty State -->
+  <div class="empty-state" id="emptyState">
+    <div class="icon">🔍</div>
+    <h3>No vehicles found</h3>
+    <p>Try adjusting your search or filter</p>
+  </div>
+
+  <!-- ── Hyper Cars ── -->
+  <section class="cat-section" id="hyper-cars" data-category="hyper-cars">
+    <div class="cat-header">
+      <span class="cat-icon">🏎️</span>
+      <span class="cat-name">Hyper Cars</span>
+      <span class="cat-count"><span class="cat-vis">19</span> / 19</span>
+    </div>
+    <div class="table-card">
+      <table class="v-table">
+        <thead><tr><th>Vehicle Name</th><th>Tier</th></tr></thead>
+        <tbody>
+          <tr data-tier="3" data-name="2022 atone-mira valkyrie"><td>2022 Atone-Mira Valkyrie</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="4" data-name="2011 bulatti veyron super sport"><td>2011 Bulatti Veyron Super Sport</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="2" data-name="2017 bulatti chiron"><td>2017 Bulatti Chiron</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="5" data-name="2022 bulatti chiron super sport 300+"><td>2022 Bulatti Chiron Super Sport 300+</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="3" data-name="2010 css ultimate aero"><td>2010 CSS Ultimate Aero</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="3" data-name="1997 dallinger xp gte"><td>1997 Dallinger XP GTE</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="3" data-name="2021 edison roadster"><td>2021 Edison Roadster</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="4" data-name="2016 ethanol venom gt"><td>2016 Ethanol Venom GT</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="5" data-name="2021 ethanol venom f5"><td>2021 Ethanol Venom F5</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="4" data-name="2014 furai lafurai"><td>2014 Furai LaFurai</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="5" data-name="2014 koneggsaga agera r"><td>2014 Koneggsaga Agera R</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="5" data-name="2015 koneggsaga one"><td>2015 Koneggsaga One</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="4" data-name="2022 lunare intensa emozione"><td>2022 Lunare Intensa Emozione</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="1" data-name="1998 mcfaren f1"><td>1998 McFaren F1</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="3" data-name="2015 mcfaren p1"><td>2015 McFaren P1</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="2" data-name="2020 mcfaren speedtail"><td>2020 McFaren Speedtail</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="2" data-name="2018 paijani huayra"><td>2018 Paijani Huayra</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="4" data-name="2015 pohrse 918 spyder roadster"><td>2015 Pohrse 918 Spyder Roadster</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="5" data-name="2015 pohrse 918 weissach package"><td>2015 Pohrse 918 Weissach Package</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── Pick Up Trucks ── -->
+  <section class="cat-section" id="pick-up-trucks" data-category="pick-up-trucks">
+    <div class="cat-header">
+      <span class="cat-icon">🛻</span>
+      <span class="cat-name">Pick Up Trucks</span>
+      <span class="cat-count"><span class="cat-vis">5</span> / 5</span>
+    </div>
+    <div class="table-card">
+      <table class="v-table">
+        <thead><tr><th>Vehicle Name</th><th>Tier</th></tr></thead>
+        <tbody>
+          <tr data-tier="3" data-name="2021 dodje ram trx"><td>2021 Dodje RAM TRX</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="2" data-name="2020 fard f150"><td>2020 Fard F150</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="1" data-name="2021 hammer ev"><td>2021 Hammer EV</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="1" data-name="2020 jeff gladiator"><td>2020 Jeff Gladiator</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="1" data-name="2023 terra rancher"><td>2023 Terra Rancher</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── Powersports ── -->
+  <section class="cat-section" id="powersports" data-category="powersports">
+    <div class="cat-header">
+      <span class="cat-icon">🏍️</span>
+      <span class="cat-name">Powersports</span>
+      <span class="cat-count"><span class="cat-vis">3</span> / 3</span>
+    </div>
+    <div class="table-card">
+      <table class="v-table">
+        <thead><tr><th>Vehicle Name</th><th>Tier</th></tr></thead>
+        <tbody>
+          <tr data-tier="4" data-name="2017 shifter kart"><td>2017 Shifter Kart</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="3" data-name="2015 rental kart"><td>2015 Rental Kart</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="2" data-name="2019 kawisake ninja h2"><td>2019 Kawisake Ninja H2</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── Sedans ── -->
+  <section class="cat-section" id="sedans" data-category="sedans">
+    <div class="cat-header">
+      <span class="cat-icon">🚗</span>
+      <span class="cat-name">Sedans</span>
+      <span class="cat-count"><span class="cat-vis">12</span> / 12</span>
+    </div>
+    <div class="table-card">
+      <table class="v-table">
+        <thead><tr><th>Vehicle Name</th><th>Tier</th></tr></thead>
+        <tbody>
+          <tr data-tier="1" data-name="2020 banthey flying spur"><td>2020 Banthey Flying Spur</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="3" data-name="2013 bnw m5"><td>2013 BNW M5</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="2" data-name="2019 bnw 530i"><td>2019 BNW 530i</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="4" data-name="2019 bnw m5"><td>2019 BNW M5</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="1" data-name="2016 chavy ss"><td>2016 Chavy SS</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="1" data-name="2021 dayton striker"><td>2021 Dayton Striker</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="2" data-name="2022 keya stinger gt2"><td>2022 Keya Stinger GT2</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="5" data-name="2011 mazeri quattroporte gts"><td>2011 Mazeri Quattroporte GTS</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="1" data-name="1990 muaraci-bens 190e 2.5-16 evolution ii"><td>1990 Muaraci-Bens 190E 2.5-16 Evolution II</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="5" data-name="2019 muaraci-maibach pullman"><td>2019 Muaraci-Maibach Pullman</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="1" data-name="2022 pohrse taycan turbo s"><td>2022 Pohrse Taycan Turbo S</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="5" data-name="2021 rolls rayce ghost"><td>2021 Rolls Rayce Ghost</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── Super Cars ── -->
+  <section class="cat-section" id="super-cars" data-category="super-cars">
+    <div class="cat-header">
+      <span class="cat-icon">🏁</span>
+      <span class="cat-name">Super Cars</span>
+      <span class="cat-count"><span class="cat-vis">53</span> / 53</span>
+    </div>
+    <div class="table-card">
+      <table class="v-table">
+        <thead><tr><th>Vehicle Name</th><th>Tier</th></tr></thead>
+        <tbody>
+          <tr data-tier="5" data-name="2010 aero atom v8"><td>2010 Aero Atom V8</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="4" data-name="2010 alpha 8c competizione"><td>2010 Alpha 8C Competizione</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="3" data-name="2011 aristo m600"><td>2011 Aristo M600</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="2" data-name="2011 atone mira v12 vantage"><td>2011 Atone Mira V12 Vantage</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="2" data-name="2011 atone-mira one-77"><td>2011 Atone-Mira One-77</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="1" data-name="2018 atone mira db11"><td>2018 Atone Mira DB11</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="2" data-name="2020 atone-mira dbs superleggera"><td>2020 Atone-Mira DBS Superleggera</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="1" data-name="2021 atone mira vantage"><td>2021 Atone Mira Vantage</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="2" data-name="2017 axura nsx"><td>2017 Axura NSX</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="5" data-name="2015 bmc mono"><td>2015 BMC Mono</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="3" data-name="2023 chavy corvette z06"><td>2023 Chavy Corvette Z06</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="2" data-name="2023 chavy corvette z06 z07 package"><td>2023 Chavy Corvette Z06 Z07 Package</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="5" data-name="2013 ctm x-bow r"><td>2013 CTM X-Bow R</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="5" data-name="2017 daisen oni"><td>2017 Daisen Oni</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="2" data-name="2021 owdi r8 v10"><td>2021 Owdi R8 V10</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="5" data-name="2008 owdi r8"><td>2008 Owdi R8</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="4" data-name="2007 salane s7"><td>2007 Salane S7</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="3" data-name="2021 spritzer gt9"><td>2021 Spritzer GT9</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="5" data-name="spritzer 900"><td>Spritzer 900</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="5" data-name="2010 xynvo st1"><td>2010 Xynvo ST1</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="5" data-name="1998 dodje viper gts"><td>1998 Dodje Viper GTS</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="4" data-name="2010 dodje viper srt-10"><td>2010 Dodje Viper SRT-10</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="3" data-name="2010 dodje viper srt-10 acr-x"><td>2010 Dodje Viper SRT-10 ACR-X</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="1" data-name="2017 dodje viper srt"><td>2017 Dodje Viper SRT</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="4" data-name="2013 esperanza gta spano"><td>2013 Esperanza GTA Spano</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="3" data-name="2005 fard gt"><td>2005 Fard GT</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="2" data-name="2020 fard gt"><td>2020 Fard GT</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="1" data-name="2015 furai 458 italia"><td>2015 Furai 458 Italia</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="2" data-name="2016 furai f12"><td>2016 Furai F12</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="1" data-name="2019 furai 488 pista"><td>2019 Furai 488 Pista</td><td><span class="tier-badge" data-t="1"><span class="dot"></span>Tier 1</span></td></tr>
+          <tr data-tier="2" data-name="2021 furai f8 tributo"><td>2021 Furai F8 Tributo</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="4" data-name="2022 furai sf90 stradale"><td>2022 Furai SF90 Stradale</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="5" data-name="2025 italica velocita"><td>2025 Italica Velocita</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="2" data-name="2025 italica velocita corsa"><td>2025 Italica Velocita Corsa</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="2" data-name="2003 lamburghina murcielago roadster"><td>2003 Lamburghina Murcielago Roadster</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="5" data-name="2008 lamburghina gallardo"><td>2008 Lamburghina Gallardo</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="4" data-name="2009 lamburghina reventon roadster"><td>2009 Lamburghina Reventon Roadster</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="2" data-name="2011 lamburghina aventador"><td>2011 Lamburghina Aventador</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="3" data-name="2011 lamburghina gallardo superleggera"><td>2011 Lamburghina Gallardo Superleggera</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="2" data-name="2018 lamburghina huracan performante"><td>2018 Lamburghina Huracan Performante</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="3" data-name="2005 mazeri mc-12"><td>2005 Mazeri MC-12</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="4" data-name="2015 mcfaren 675lt"><td>2015 McFaren 675LT</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="5" data-name="2016 mcfaren 650s"><td>2016 McFaren 650S</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="2" data-name="2016 mcfaren 650s spider"><td>2016 McFaren 650S Spider</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="5" data-name="2017 mcfaren 570gt"><td>2017 McFaren 570GT</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="5" data-name="2020 mcfaren 600lt"><td>2020 McFaren 600LT</td><td><span class="tier-badge" data-t="5"><span class="dot"></span>Tier 5</span></td></tr>
+          <tr data-tier="3" data-name="2020 mcfaren gt"><td>2020 McFaren GT</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="2" data-name="2020 mcfaren senna"><td>2020 McFaren Senna</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+          <tr data-tier="4" data-name="2022 mcfaren 765lt"><td>2022 McFaren 765LT</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="4" data-name="2009 muaraci-bens sl65 agm black series"><td>2009 Muaraci-Bens SL65 AGM Black Series</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="4" data-name="2013 muaraci-bens sls agm black series"><td>2013 Muaraci-Bens SLS AGM Black Series</td><td><span class="tier-badge" data-t="4"><span class="dot"></span>Tier 4</span></td></tr>
+          <tr data-tier="3" data-name="2018 muaraci-agm gt r"><td>2018 Muaraci-AGM GT R</td><td><span class="tier-badge" data-t="3"><span class="dot"></span>Tier 3</span></td></tr>
+          <tr data-tier="2" data-name="2021 muaraci-bens agm gt black series"><td>2021 Muaraci-Bens AGM GT Black Series</td><td><span class="tier-badge" data-t="2"><span class="dot"></span>Tier 2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="assets/logo.png" onerror="if(this.src.includes('assets/')){this.src='logo.png';}" alt="ASFR" class="brand-mark">
+      <div class="brand-text">
+        <span class="brand-name">ASFR</span>
+        <span class="brand-sub">Apex Southwest Florida Roleplay</span>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="rules.html">Rules</a>
+      <a href="banned-vehicles.html">Banned Vehicles</a>
+      <a href="https://discord.gg/aXCKGsg6hA" target="_blank">Discord</a>
+    </div>
+  </div>
+  <p class="footer-copy">&copy; 2025 Apex Southwest Florida Roleplay. All rights reserved.</p>
+</footer>
+
+<script>
+(function(){
+  /* ── Burger / Mobile ── */
+  const burger = document.getElementById('burger');
+  const overlay = document.getElementById('mobileOverlay');
+  const panel  = document.getElementById('mobilePanel');
+
+  function toggleMobile(){
+    burger.classList.toggle('open');
+    overlay.classList.toggle('open');
+    panel.classList.toggle('open');
+  }
+  burger.addEventListener('click', toggleMobile);
+  overlay.addEventListener('click', toggleMobile);
+  panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    if(panel.classList.contains('open')) toggleMobile();
+  }));
+
+  /* ── Elements ── */
+  const searchInput   = document.getElementById('searchInput');
+  const tierBtns      = document.querySelectorAll('#tierFilters .tier-btn');
+  const sections      = document.querySelectorAll('.cat-section');
+  const visibleCount  = document.getElementById('visibleCount');
+  const emptyState    = document.getElementById('emptyState');
+  let activeTier = 'all';
+
+  /* ── Filter Logic ── */
+  function applyFilters(){
+    const query = searchInput.value.trim().toLowerCase();
+    let totalVisible = 0;
+
+    sections.forEach(sec => {
+      const rows = sec.querySelectorAll('tbody tr');
+      let catVisible = 0;
+
+      rows.forEach(row => {
+        const name = row.getAttribute('data-name') || '';
+        const tier = row.getAttribute('data-tier');
+        const matchSearch = !query || name.includes(query);
+        const matchTier   = activeTier === 'all' || tier === activeTier;
+        if(matchSearch && matchTier){
+          row.classList.remove('filtered-out');
+          catVisible++;
+        } else {
+          row.classList.add('filtered-out');
+        }
+      });
+
+      totalVisible += catVisible;
+      sec.querySelector('.cat-vis').textContent = catVisible;
+      sec.style.display = catVisible === 0 ? 'none' : '';
+    });
+
+    visibleCount.textContent = totalVisible;
+    emptyState.classList.toggle('show', totalVisible === 0);
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+
+  tierBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tierBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeTier = btn.getAttribute('data-tier');
+      applyFilters();
+    });
+  });
+
+  /* ── Scroll Reveal ── */
+  if('IntersectionObserver' in window){
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, {threshold:0.08});
+    sections.forEach(s => obs.observe(s));
+  } else {
+    sections.forEach(s => s.classList.add('visible'));
+  }
+
+  /* ── Jump Nav Smooth Scroll ── */
+  document.querySelectorAll('.jump-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+})();
+</script>
+</body>
+</html>
